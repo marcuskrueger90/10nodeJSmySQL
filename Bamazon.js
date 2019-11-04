@@ -56,32 +56,52 @@ function purchaseItem(){
         
         if(chosenItem.stock_quantity >= parseInt(answer.quantity)){
           var amount = parseInt(answer.quantity);
-          console.log(`You purchased ${amount} ${chosenItem.product_name}(s) for a total of $${chosenItem.price*amount}`)
+          console.log(`You purchased ${amount} ${chosenItem.product_name}(s) for a total of $${chosenItem.price*amount}!!!`)
+        
+          var newQuantity = chosenItem.stock_quantity - amount;
+
+          connection.query(
+            'UPDATE products SET ? WHERE ?',
+            [
+              {
+                stock_quantity : newQuantity
+              },
+              {
+                item_id : chosenItem.item_id
+              }
+            ]
+          )
+          showProducts();
+        }else{
+          console.log(`There are only ${chosenItem.stock_quantity} left and you chose ${answer.quantity}. Please try again.`)
+          purchaseItem();
         }
   })
 
-  connection.end();
   
-})};
+  
+})
 
-// function showProducts() {
-//     console.log("Selecting all products...\n");
-//     connection.query("SELECT * FROM products", function(err, res) {
-//       if (err) throw err;
-      
-//       for (var i= 0; i < res.length; i++){
-//         console.log(`<-------------->
-//         Item ID: ${res[i].item_id}
-//         Name: ${res[i].product_name} 
-//         Department: ${res[i].department_name}
-//         Price: $${res[i].price}
-//         ${res[i].stock_quantity} LEFT IN STOCK!`);
-//       }
+};
 
-//       purchaseItem();
+function showProducts() {
+    console.log("Catalog updated...\n");
+    connection.query("SELECT * FROM products", function(err, res) {
+      if (err) throw err;
       
-//     });
-//   }
+      for (var i= 0; i < res.length; i++){
+        console.log(`<-------------->
+        Item ID: ${res[i].item_id}
+        Name: ${res[i].product_name} 
+        Department: ${res[i].department_name}
+        Price: $${res[i].price}
+        ${res[i].stock_quantity} LEFT IN STOCK!`);
+      }
+
+      connection.end();
+      
+    });
+  }
 
 
   
