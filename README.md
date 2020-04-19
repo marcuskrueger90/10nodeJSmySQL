@@ -1,4 +1,4 @@
-# 10nodeJSmySQL
+# Bamazon
 
 This is a simple shopping node app called 'Bamazon', select an item you would like to purchase and how many of that item you wish to purchase and watch the magic happen!
 
